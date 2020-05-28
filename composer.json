@@ -1,0 +1,52 @@
+{
+    "name": "dazzlesoftware/dazzle-coding-standard",
+    "description": "Dazzle Coding Standards",
+    "type": "phpcodesniffer-standard",
+    "license": "GPL-3.0-or-later",
+    "keywords": ["dazzle", "coding standards", "phpcs", "php codesniffer"],
+    "homepage": "https://framework.dazzlecms.org",
+    "support": {
+        "docs": "https://docs.dazzlecms.org",
+        "issues": "https://issues.dazzlecms.org",
+        "source": "https://github.com/dazzlesoftware/dazzle-coding-standard",
+        "rss": "https://github.com/dazzlesoftware/dazzle-coding-standard/releases.atom",
+        "forum": "https://community.dazzlecms.org"
+    },
+    "authors": [
+        {
+            "name": "Dazzle Coding Standards Contributors",
+            "homepage": "https://github.com/dazzlesoftware/dazzle-coding-standard/graphs/contributors"
+        }
+    ],
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.x-dev",
+            "dev-develop": "3.x-dev"
+        }
+    },
+    "require": {
+        "php": "^7.1",
+        "squizlabs/php_codesniffer": "^3.5.3",
+		"slevomat/coding-standard": "^6.3.6",
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dazzle\\Standards\\": "src/Dazzle/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Dazzle\\Standards\\": "test/"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths ../../..",
+        "post-update-cmd" : "\"vendor/bin/phpcs\" --config-set installed_paths ../../.."
+    }
+}

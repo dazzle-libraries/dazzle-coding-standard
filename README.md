@@ -1,2 +1,2 @@
-# dazzle-coding-standard
+# coding-standards
 Dazzle Coding Standards Definition
