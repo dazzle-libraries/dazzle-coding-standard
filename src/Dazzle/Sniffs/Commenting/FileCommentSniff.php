@@ -4,12 +4,13 @@
  *
  * PHP version 7
  *
- * @package     Dazzle.Framework
- * @subpackage  Application
- * @author      Dazzle Software <support@dazzlesoftware.org>
- * @copyright   Copyright (C) 2018 - 2020 Dazzle Software, LLC. All rights reserved.
- * @license     GNU General Public License version 3 or later; see LICENSE.md
- * @link        https://github.com/dazzle-framework/application
+ * @category   PHP
+ * @package    Dazzle.Framework
+ * @subpackage Application
+ * @author     Dazzle Software <support@dazzlesoftware.org>
+ * @copyright  Copyright (C) 2018 - 2020 Dazzle Software, LLC. All rights reserved.
+ * @license    GNU General Public License version 3 or later; see LICENSE.md
+ * @link       https://github.com/dazzlesoftware/dazzle-coding-standard
  */
 
 namespace Dazzle\Sniffs\Commenting;
@@ -26,10 +27,6 @@ class FileCommentSniff implements Sniff
      * @var array
      */
     protected $tags = [
-        '@version'    => [
-            'required'       => false,
-            'allow_multiple' => false,
-        ],
         '@category'   => [
             'required'       => false,
             'allow_multiple' => false,
@@ -54,6 +51,10 @@ class FileCommentSniff implements Sniff
             'required'       => true,
             'allow_multiple' => false,
         ],
+        '@version'    => [
+            'required'       => false,
+            'allow_multiple' => false,
+        ],
         '@link'       => [
             'required'       => true,
             'allow_multiple' => true,
@@ -70,6 +71,16 @@ class FileCommentSniff implements Sniff
             'required'       => false,
             'allow_multiple' => false,
         ],
+    ];
+
+    /**
+     * Blacklisted tags
+     *
+     * @var array<string>
+     */
+    protected $blacklist = [
+        '@package',
+        '@subpackage',
     ];
 
     /**
@@ -96,8 +107,7 @@ class FileCommentSniff implements Sniff
      * Processes this test, when one of its tokens is encountered.
      *
      * @param \PHP_CodeSniffer\Files\File $phpcsFile The file being scanned.
-     * @param int                         $stackPtr  The position of the current token
-     *                                               in the stack passed in $tokens.
+     * @param int                         $stackPtr  The position of the current token in the stack passed in $tokens.
      *
      * @return int
      */
@@ -231,8 +241,14 @@ class FileCommentSniff implements Sniff
         $tagTokens = [];
         foreach ($tokens[$commentStart]['comment_tags'] as $tag) {
             $name = $tokens[$tag]['content'];
+
             if (isset($this->tags[$name]) === false) {
                 continue;
+            }
+
+            if (in_array($name, $this->blacklist, true)) {
+                $error = sprintf('The %s tag is not allowed.', $name);
+                $phpcsFile->addError($error, $tag, 'Blacklisted');
             }
 
             if ($this->tags[$name]['allow_multiple'] === false && isset($tagTokens[$name]) === true) {
@@ -264,6 +280,17 @@ class FileCommentSniff implements Sniff
         foreach ($this->tags as $tag => $tagData) {
             if (isset($tagTokens[$tag]) === false) {
                 if ($tagData['required'] === true) {
+                    // We don't use package tags in namespaced code
+                    if ($tag == '@package' || $tag === '@subpackage') {
+                        // Check for a namespace token, if certain other tokens are found we can move on. This keeps us from searching the whole file.
+                        $namespaced = $phpcsFile->findNext([T_NAMESPACE, T_CLASS, T_INTERFACE, T_TRAIT], 0);
+
+                        // If we found a namespace token we skip the error, otherwise we let the error happen
+                        if ($tokens[$namespaced]['code'] === T_NAMESPACE) {
+                            continue;
+                        }
+                    }
+
                     $error = 'Missing %s tag in %s comment';
                     $data  = [
                         $tag,
@@ -529,6 +556,26 @@ class FileCommentSniff implements Sniff
         }
     }
 
+    protected function processSince(File $phpcsFile, array $tags)
+    {
+        $tokens = $phpcsFile->getTokens();
+        foreach ($tags as $tag) {
+            if ($tokens[($tag + 2)]['code'] !== T_DOC_COMMENT_STRING) {
+                // No content.
+                continue;
+            }
+
+            $content = $tokens[($tag + 2)]['content'];
+            $matches = [];
+            preg_match('^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$', $content, $matches);
+            if (count($matches) !== 3) {
+				//Valid Semantic Versions
+                $error = '@since tag must contain a valid semantic version tag in file comment';
+                $phpcsFile->addError($error, $tag, 'InvalidVersion');
+            }
+        }
+    }
+
     /**
      * Process the version tag.
      *
@@ -547,9 +594,9 @@ class FileCommentSniff implements Sniff
             }
 
             $content = $tokens[($tag + 2)]['content'];
-			$matches = [];
+            $matches = [];
             preg_match('((?:[0-9]+\.?)+)', $content, $matches);
-			if (count($matches) !== 3) {
+            if (count($matches) !== 3) {
                 $error = '@version tag in file comment is not required; consider removing or using @since';
                 $phpcsFile->addError($error, $tag, 'InvalidVersion');
             }

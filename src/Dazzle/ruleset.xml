@@ -5,35 +5,98 @@
 
     <!-- 1. Overview -->
 
-	<!-- This guide extends and expands on [PSR-12], the basic coding standard. -->
+    <!-- This guide extends and expands on [PSR-12], the basic coding standard. -->
 
-	<!-- The intent of this guide is to reduce cognitive friction when scanning code
-	from different authors. It does so by enumerating a shared set of rules and
-	expectations about how to format PHP code. -->
+    <!-- The intent of this guide is to reduce cognitive friction when scanning code
+    from different authors. It does so by enumerating a shared set of rules and
+    expectations about how to format PHP code. -->
 
-	<!-- The style rules herein are derived from commonalities among the various member
-	projects. When various authors collaborate across multiple projects, it helps
-	to have one set of guidelines to be used among all those projects. Thus, the
-	benefit of this guide is not in the rules themselves, but in the sharing of
-	those rules. -->
+    <!-- The style rules herein are derived from commonalities among the various member
+    projects. When various authors collaborate across multiple projects, it helps
+    to have one set of guidelines to be used among all those projects. Thus, the
+    benefit of this guide is not in the rules themselves, but in the sharing of
+    those rules. -->
 
     <!-- 1.1 Basic Coding Standard -->
 
     <!-- Code MUST follow all rules outlined in PSR-12. -->
     <rule ref="PSR12"/>
 
-	<!-- 2. Arrays -->
-	<!-- 3. CSS -->
-	<!-- 4. Classes -->
-	<!-- 5. Commenting -->
+    <!-- 2. Arrays -->
 
-	<!-- checked by Dazzle.Commenting.FileComment -->
+    <rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma"/>
 
-	<!-- 6. ControlStructures -->
-	<!-- 7. Debug -->
+    <!-- 3. CSS -->
 
 
-	<!-- 8. Files -->
+
+    <!-- 4. Classes -->
+
+    <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility">
+        <properties>
+            <property name="fixable" type="boolean" value="true"/>
+        </properties>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Classes.EmptyLinesAroundClassBraces">
+        <properties>
+            <property name="linesCountAfterOpeningBrace" value="0"/>
+            <property name="linesCountBeforeClosingBrace" value="0"/>
+        </properties>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Classes.ModernClassNameReference"/>
+
+    <rule ref="SlevomatCodingStandard.Classes.UnusedPrivateElements"/>
+    <!-- 5. Commenting -->
+
+    <!-- checked by Dazzle.Commenting.ClassComment -->
+    <!-- checked by Dazzle.Commenting.FileComment -->
+    <!-- checked by Dazzle.Commenting.FunctionComment -->
+    <!-- checked by Dazzle.Commenting.InlineComment -->
+
+    <rule ref="SlevomatCodingStandard.Commenting.DisallowOneLinePropertyDocComment"/>
+
+    <rule ref="SlevomatCodingStandard.Commenting.DocCommentSpacing">
+        <properties>
+            <property name="linesCountBeforeFirstContent" value="0" />
+            <property name="linesCountBetweenDescriptionAndAnnotations" value="1" />
+            <property name="linesCountBetweenDifferentAnnotationsTypes" value="0" />
+            <property name="linesCountBetweenAnnotationsGroups" value="0" />
+            <property name="linesCountAfterLastContent" value="0" />
+        </properties>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Commenting.EmptyComment"/>
+
+    <rule ref="SlevomatCodingStandard.Commenting.InlineDocCommentDeclaration">
+        <properties>
+            <property name="allowDocCommentAboveReturn" type="boolean" value="true" />
+        </properties>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Commenting.InlineDocCommentDeclaration.NoAssignment">
+        <severity>0</severity>
+    </rule>
+
+    <!-- 6. ControlStructures -->
+
+    <rule ref="SlevomatCodingStandard.ControlStructures.AssignmentInCondition"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.DisallowContinueWithoutIntegerOperandInSwitch"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.DisallowYodaComparison"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.LanguageConstructWithParentheses"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.NewWithParentheses"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceOperator"/>
+
+    <!-- 7. Exceptions -->
+
+    <rule ref="SlevomatCodingStandard.Exceptions.DeadCatch"/>
+
+    <!-- 7. Debug -->
+
+
+
+    <!-- 8. Files -->
 
     <!-- All PHP files MUST use the Unix LF (linefeed) line ending only. -->
     <rule ref="Generic.Files.LineEndings">
@@ -52,22 +115,77 @@
     <!-- 8.1 Lines -->
 
     <!-- There MUST NOT be a hard limit on line length.
-    The soft limit on line length MUST be 150 characters.
+    The soft limit on line length MUST be 180 characters.
     Lines SHOULD NOT be longer than 80 characters; lines longer than that SHOULD be split into multiple subsequent lines of no more than 80 characters each. -->
     <rule ref="Generic.Files.LineLength">
         <properties>
-            <property name="lineLimit" value="150"/>
+            <property name="lineLimit" value="180"/>
             <property name="absoluteLineLimit" value="0"/>
         </properties>
     </rule>
 
-	<!-- 9. Formatting -->
-	<!-- 10. Functions -->
-	<!-- 11. NamingConventions -->
-	<!-- 12. Objects -->
-	<!-- 13. Operators -->
-	<!-- 14. PHP -->
-	<!-- 15. Scope -->
-	<!-- 16. Strings -->
-	<!-- 17. WhiteSpace -->
+    <!-- 9. Formatting -->
+
+
+
+    <!-- 10. Functions -->
+
+
+
+    <!-- 11. Namespaces -->
+
+    <rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.NamespaceDeclaration"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseFromSameNamespace"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseSpacing"/>
+
+    <!-- 12. NamingConventions -->
+
+
+
+    <!-- 13. Objects -->
+
+
+
+    <!-- 14. Operators -->
+
+
+
+    <!-- 15. PHP -->
+
+    <rule ref="SlevomatCodingStandard.PHP.ShortList"/>
+    <rule ref="SlevomatCodingStandard.PHP.TypeCast"/>
+    <rule ref="SlevomatCodingStandard.PHP.UselessParentheses"/>
+    <rule ref="SlevomatCodingStandard.PHP.UselessSemicolon"/>
+
+    <!-- 16. Scope -->
+
+
+
+    <!-- 17. Strings -->
+
+
+
+    <!-- 18. TypeHints -->
+
+    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
+        <properties>
+            <property name="newlinesCountAfterDeclare" value="2"/>
+            <property name="spacesCountAroundEqualsSign" value="0"/>
+            <property name="newlinesCountBetweenOpenTagAndDeclare" value="1"/>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHintSpacing"/>
+    <rule ref="SlevomatCodingStandard.Variables.DuplicateAssignmentToVariable"/>
+
+    <!-- 19. WhiteSpace -->
+
+
+
 </ruleset>
