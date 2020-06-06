@@ -28,7 +28,7 @@ class FileCommentSniff implements Sniff
      */
     protected $tags = [
         '@category'   => [
-            'required'       => false,
+            'required'       => true,
             'allow_multiple' => false,
         ],
         '@package'    => [
@@ -79,8 +79,7 @@ class FileCommentSniff implements Sniff
      * @var array<string>
      */
     protected $blacklist = [
-        '@package',
-        '@subpackage',
+        '@version',
     ];
 
     /**
@@ -556,6 +555,14 @@ class FileCommentSniff implements Sniff
         }
     }
 
+    /**
+     * Process the since tag.
+     *
+     * @param \PHP_CodeSniffer\Files\File $phpcsFile The file being scanned.
+     * @param array                       $tags      The tokens for these tags.
+     *
+     * @return void
+     */
     protected function processSince(File $phpcsFile, array $tags)
     {
         $tokens = $phpcsFile->getTokens();
@@ -567,9 +574,9 @@ class FileCommentSniff implements Sniff
 
             $content = $tokens[($tag + 2)]['content'];
             $matches = [];
-            preg_match('^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$', $content, $matches);
+            preg_match('^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$', $content, $matches);
             if (count($matches) !== 3) {
-				//Valid Semantic Versions
+                //Valid Semantic Versions
                 $error = '@since tag must contain a valid semantic version tag in file comment';
                 $phpcsFile->addError($error, $tag, 'InvalidVersion');
             }
